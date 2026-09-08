@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Register — Drive Legal AI</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="css/global.css">
+<link rel="stylesheet" href="css/auth.css">
+<link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+<div class="auth-wrapper">
+  <div class="glass-card accented auth-card" style="max-width:460px;">
+    <div class="auth-logo">
+      <div class="emoji">🚗</div>
+      <h1>Create Account</h1>
+      <p>Public registration creates a standard user account</p>
+    </div>
+
+    <form id="registerForm">
+      <div class="form-group">
+        <label class="form-label">Full Name</label>
+        <input type="text" id="name" class="form-control" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <input type="email" id="email" class="form-control" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Phone</label>
+        <input type="tel" id="phone" class="form-control" placeholder="10-digit mobile number">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <input type="password" id="password" class="form-control" minlength="8" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Account Type</label>
+        <select id="role" class="form-control">
+          <option value="USER">Public / User</option>
+          <option value="POLICE">Police Officer (requires approval)</option>
+          <option value="GOVERNMENT_STAFF">Government Staff (requires approval)</option>
+        </select>
+      </div>
+
+      <div id="staffFields">
+        <div class="form-group">
+          <label class="form-label">Officer / Staff ID</label>
+          <input type="text" id="officerId" class="form-control">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Organization ID</label>
+          <input type="text" id="organizationId" class="form-control">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Registration Code</label>
+          <input type="text" id="registrationCode" class="form-control" placeholder="Provided by your department admin">
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary" style="width:100%;">Create Account</button>
+    </form>
+
+    <div style="text-align:center; margin-top:16px; font-size:12.5px;">
+      Already have an account? <a href="login.html">Sign in</a>
+    </div>
+  </div>
+</div>
+
+<script src="js/config.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/api.js"></script>
+<script src="js/auth.js"></script>
+</body>
+</html>
