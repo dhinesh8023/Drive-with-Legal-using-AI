@@ -1,0 +1,24 @@
+/* Dashboard-page-specific styles + a few small utility classes
+   not already covered by global.css */
+
+.page-header { margin-bottom: 20px; }
+.page-header h2 { margin: 0 0 4px; font-size: 22px; }
+
+.text-accent { color: var(--accent-cyan); }
+.mb-16 { margin-bottom: 16px; }
+.mb-24 { margin-bottom: 24px; }
+
+.quick-action {
+  display: flex; flex-direction: column; gap: 6px;
+  text-decoration: none; transition: transform 0.15s ease, border-color 0.15s ease;
+}
+.quick-action:hover {
+  transform: translateY(-2px);
+  border-color: var(--border-strong);
+  text-decoration: none;
+}
+
+/* Risk gauge (used on dashboard + live-drive) */
+.risk-gauge-wrap { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.risk-gauge-score { font-size: 42px; font-weight: 800; line-height: 1; }
+.risk-gauge-label { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); }
