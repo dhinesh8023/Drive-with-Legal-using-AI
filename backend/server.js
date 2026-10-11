@@ -61,11 +61,12 @@ app.use('/receipts', express.static(path.join(__dirname, 'public/receipts')));
 app.use(express.static(path.join(__dirname, '../frontend')));
 
 // Health Check
-app.get('/api/health', (req, res) => {
+app.get(['/health', '/api/health'], (req, res) => {
   res.status(200).json({
     status: 'ONLINE',
     service: 'Drive Legal AI Core Backend',
     version: '1.0.0 (SIH 2026)',
+    database: require('mongoose').connection.readyState === 1 ? 'CONNECTED' : 'STANDBY_MODE',
     timestamp: new Date().toISOString(),
   });
 });
