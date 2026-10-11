@@ -33,3 +33,5 @@ public/uploads/*
 Thumbs.db
 .vscode/
 .idea/
+
+.vercel

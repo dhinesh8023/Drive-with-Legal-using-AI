@@ -112,8 +112,9 @@ app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 
-server.listen(PORT, () => {
-  console.log(`
+if (!process.env.VERCEL) {
+  server.listen(PORT, () => {
+    console.log(`
 =====================================================
 🚗 DRIVE LEGAL AI — BACKEND RUNNING
 =====================================================
@@ -123,8 +124,9 @@ server.listen(PORT, () => {
 • Health Check:   http://127.0.0.1:${PORT}/api/health
 • Static UI:      http://127.0.0.1:${PORT}/index.html
 =====================================================
-  `);
-});
+    `);
+  });
+}
 
 module.exports = app;
 
