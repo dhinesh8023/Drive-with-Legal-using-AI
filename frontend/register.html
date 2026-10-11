@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register Account — Drive Legal AI</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/auth.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+  <div class="auth-wrapper">
+    <div class="auth-card" style="max-width: 520px;">
+      <div class="auth-logo">
+        <i class="bi bi-person-plus-fill"></i>
+        <h2>Create Account</h2>
+        <p>Join the AI-Powered Road Safety Ecosystem</p>
+      </div>
+
+      <!-- Role Selector -->
+      <div class="role-tabs" style="grid-template-columns: repeat(3, 1fr);">
+        <button type="button" class="role-tab-btn active" data-role="USER">Public Commuter</button>
+        <button type="button" class="role-tab-btn" data-role="POLICE">Police Officer</button>
+        <button type="button" class="role-tab-btn" data-role="GOVERNMENT_STAFF">Govt Staff</button>
+      </div>
+
+      <form id="register-form">
+        <div class="form-group">
+          <label class="form-label">Full Name</label>
+          <div class="input-with-icon">
+            <i class="bi bi-person"></i>
+            <input type="text" id="reg-name" class="dl-input" placeholder="Arun Kumar" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Email Address</label>
+          <div class="input-with-icon">
+            <i class="bi bi-envelope"></i>
+            <input type="email" id="reg-email" class="dl-input" placeholder="arun@example.com" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Phone Number (SMS Notifications)</label>
+          <div class="input-with-icon">
+            <i class="bi bi-telephone"></i>
+            <input type="tel" id="reg-phone" class="dl-input" placeholder="+91-9876543210" required>
+          </div>
+        </div>
+
+        <!-- Conditional Officer Credentials -->
+        <div id="officer-fields" class="d-none">
+          <div class="form-group">
+            <label class="form-label">Official Officer ID</label>
+            <div class="input-with-icon">
+              <i class="bi bi-badge-ad"></i>
+              <input type="text" id="reg-officer-id" class="dl-input" placeholder="POLICE-TN-9988">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Department / Organization ID</label>
+            <div class="input-with-icon">
+              <i class="bi bi-building"></i>
+              <input type="text" id="reg-org-id" class="dl-input" placeholder="TAMIL_NADU_TRAFFIC_POLICE">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <div class="input-with-icon">
+            <i class="bi bi-lock"></i>
+            <input type="password" id="reg-password" class="dl-input" placeholder="••••••••••••" minlength="6" required>
+          </div>
+        </div>
+
+        <button type="submit" id="reg-submit-btn" class="btn-dl btn-dl-primary w-100 py-3 mt-2">
+          <i class="bi bi-check2-circle"></i> Complete Registration
+        </button>
+      </form>
+
+      <div class="text-center mt-4 text-muted small">
+        Already registered? <a href="login.html" class="fw-bold">Sign In here</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script>
+    let activeRole = 'USER';
+
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('.role-tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          activeRole = btn.dataset.role;
+          document.querySelectorAll('.role-tab-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+
+          const officerFields = document.getElementById('officer-fields');
+          if (activeRole === 'USER') {
+            officerFields.classList.add('d-none');
+          } else {
+            officerFields.classList.remove('d-none');
+          }
+        });
+      });
+
+      document.getElementById('register-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const payload = {
+          name: document.getElementById('reg-name').value,
+          email: document.getElementById('reg-email').value,
+          phone: document.getElementById('reg-phone').value,
+          password: document.getElementById('reg-password').value,
+          role: activeRole,
+          officerId: document.getElementById('reg-officer-id').value,
+          organizationId: document.getElementById('reg-org-id').value,
+        };
+
+        const btn = document.getElementById('reg-submit-btn');
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Creating Account...';
+
+        const res = await Auth.register(payload);
+        if (res.success && res.data) {
+          Utils.showToast('success', 'Registration Successful', 'Welcome to Drive Legal AI');
+          setTimeout(() => {
+            const redirectUrl = CONFIG.ROLE_REDIRECTS[activeRole] || 'dashboard.html';
+            window.location.href = redirectUrl;
+          }, 800);
+        } else {
+          Utils.showToast('danger', 'Registration Failed', res.message || 'Please check your information');
+          btn.disabled = false;
+          btn.innerHTML = '<i class="bi bi-check2-circle"></i> Complete Registration';
+        }
+      });
+    });
+  </script>
+</body>
+</html>

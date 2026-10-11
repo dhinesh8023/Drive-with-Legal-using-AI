@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Live AI Drive — Drive Legal AI</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="css/live-drive.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+  <div class="app-container">
+    <!-- Sidebar Navigation -->
+    <aside class="app-sidebar">
+      <div class="sidebar-header">
+        <i class="bi bi-shield-shaded sidebar-brand-icon"></i>
+        <span class="sidebar-brand-text">DRIVE LEGAL <span style="color:#00f0ff;">AI</span></span>
+      </div>
+
+      <div class="sidebar-nav">
+        <div class="nav-section-title">Commuter Control</div>
+        <a href="dashboard.html" class="nav-item-link"><i class="bi bi-speedometer2"></i> Dashboard</a>
+        <a href="live-drive.html" class="nav-item-link active"><i class="bi bi-camera-video"></i> Live AI Drive</a>
+        <a href="vehicles.html" class="nav-item-link"><i class="bi bi-car-front-fill"></i> My Vehicles</a>
+        <a href="fine-management.html" class="nav-item-link"><i class="bi bi-receipt"></i> Fines & Challans</a>
+        <a href="payments.html" class="nav-item-link"><i class="bi bi-credit-card"></i> Pay Fines</a>
+        <a href="fastag.html" class="nav-item-link"><i class="bi bi-wallet2"></i> FASTag Wallet</a>
+        <a href="disputes.html" class="nav-item-link"><i class="bi bi-shield-exclamation"></i> Contest Fine</a>
+
+        <div class="nav-section-title">Roadway Safety</div>
+        <a href="road-map.html" class="nav-item-link"><i class="bi bi-geo-alt"></i> Safety Map</a>
+        <a href="hazards.html" class="nav-item-link"><i class="bi bi-cone-striped"></i> Report Hazard</a>
+        <a href="route-planner.html" class="nav-item-link"><i class="bi bi-signpost-split"></i> Safe Route Planner</a>
+        <a href="notifications.html" class="nav-item-link"><i class="bi bi-bell"></i> Alerts & Notices</a>
+        <a href="emergency.html" class="nav-item-link"><i class="bi bi-hospital"></i> Emergency SOS</a>
+
+        <div class="nav-section-title">System</div>
+        <a href="settings.html" class="nav-item-link"><i class="bi bi-gear"></i> Settings</a>
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="user-badge-mini">
+          <div class="user-avatar-circle" id="sidebar-user-avatar">U</div>
+          <div style="flex:1; overflow:hidden;">
+            <div class="text-white text-truncate fw-bold small" id="sidebar-user-name">Commuter User</div>
+            <div class="text-muted small" id="sidebar-user-role">Public Commuter</div>
+          </div>
+          <button class="btn btn-sm text-muted p-0" onclick="Auth.logout()"><i class="bi bi-box-arrow-right fs-5"></i></button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="app-main">
+      <header class="app-topbar">
+        <div class="d-flex align-items-center gap-3">
+          <button class="mobile-menu-toggle"><i class="bi bi-list"></i></button>
+          <span class="text-white fw-bold">Live AI Drive Telemetry HUD</span>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+          <button id="toggle-camera-btn" class="btn-dl btn-dl-outline" style="padding: 0.35rem 0.85rem; font-size: 0.82rem;">
+            <i class="bi bi-camera-video"></i> Connect Physical Camera
+          </button>
+          <button id="emergency-sos-btn" class="btn-dl btn-dl-danger" style="padding: 0.35rem 0.85rem; font-size: 0.82rem;">
+            <i class="bi bi-telephone-outbound"></i> SOS Alert
+          </button>
+        </div>
+      </header>
+
+      <div class="app-content">
+        <!-- Live Layout -->
+        <div class="live-drive-layout">
+          <!-- Left: Vision Viewport & Scenarios -->
+          <div>
+            <!-- Camera & Canvas Viewport -->
+            <div class="camera-viewport">
+              <video id="camera-video" autoplay playsinline style="display: none;"></video>
+              <canvas id="simulated-canvas"></canvas>
+
+              <!-- HUD Layer -->
+              <div class="hud-overlay">
+                <div class="hud-top-bar">
+                  <div class="hud-pill">
+                    <span class="live-indicator"></span>
+                    <span>AI RISK SENSOR ACTIVE</span>
+                  </div>
+                  <div class="hud-pill">
+                    <i class="bi bi-broadcast text-cyan"></i>
+                    <span>TRIP: <span id="live-session-badge">INITIALIZING</span></span>
+                  </div>
+                </div>
+
+                <!-- Center Telemetry Cluster -->
+                <div class="hud-telemetry-cluster">
+                  <div class="hud-speedo-box">
+                    <span class="hud-speed-value" id="hud-speed-val">48</span>
+                    <span class="hud-speed-unit">KM/H</span>
+                  </div>
+
+                  <div class="d-flex align-items-center gap-2">
+                    <div class="text-end me-1">
+                      <div class="small text-muted fw-bold">ZONE LIMIT</div>
+                      <div class="small text-cyan">ADAPTIVE RADAR</div>
+                    </div>
+                    <div class="hud-speed-limit-badge" id="hud-speed-limit">60</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Scenario Selection Panel -->
+            <div class="scenario-selector-panel">
+              <div class="d-flex align-items-center justify-content-between mb-2">
+                <span class="text-white fw-bold small text-uppercase" style="letter-spacing: 0.05em;">
+                  <i class="bi bi-sliders text-cyan"></i> Hackathon Interactive Scenarios
+                </span>
+                <small class="text-muted">Simulate driving hazards & telemetry spikes in real-time</small>
+              </div>
+
+              <div class="scenario-grid">
+                <button type="button" class="scenario-btn active" data-scenario="NORMAL DRIVING">
+                  <i class="bi bi-check2-circle text-success"></i> Normal Driving
+                </button>
+                <button type="button" class="scenario-btn" data-scenario="OVERSPEEDING">
+                  <i class="bi bi-speedometer text-danger"></i> Overspeeding
+                </button>
+                <button type="button" class="scenario-btn" data-scenario="DROWSINESS">
+                  <i class="bi bi-eye-slash-fill text-warning"></i> Drowsiness
+                </button>
+                <button type="button" class="scenario-btn" data-scenario="DISTRACTION">
+                  <i class="bi bi-headset text-warning"></i> Distraction
+                </button>
+                <button type="button" class="scenario-btn" data-scenario="MOBILE PHONE USAGE">
+                  <i class="bi bi-phone-vibrate text-danger"></i> Phone Usage
+                </button>
+                <button type="button" class="scenario-btn" data-scenario="POTHOLE">
+                  <i class="bi bi-cone-striped text-warning"></i> Pothole
+                </button>
+                <button type="button" class="scenario-btn" data-scenario="UNSAFE OVERTAKING">
+                  <i class="bi bi-arrows-expand text-warning"></i> Unsafe Pass
+                </button>
+                <button type="button" class="scenario-btn" data-scenario="WRONG SIDE DRIVING">
+                  <i class="bi bi-sign-stop-fill text-danger"></i> Wrong Side
+                </button>
+                <button type="button" class="scenario-btn" data-scenario="HEAVY RAIN">
+                  <i class="bi bi-cloud-rain-heavy text-cyan"></i> Heavy Rain
+                </button>
+                <button type="button" class="scenario-btn" data-scenario="LANE DEPARTURE">
+                  <i class="bi bi-distribute-vertical text-warning"></i> Lane Drift
+                </button>
+                <button type="button" class="scenario-btn" data-scenario="SUDDEN BRAKING">
+                  <i class="bi bi-exclamation-triangle-fill text-warning"></i> Sudden Brake
+                </button>
+                <button type="button" class="scenario-btn" data-scenario="COLLISION RISK">
+                  <i class="bi bi-car-front-fill text-danger"></i> Collision Risk
+                </button>
+                <button type="button" class="scenario-btn" data-scenario="ACCIDENT">
+                  <i class="bi bi-fire text-danger"></i> Accident SOS
+                </button>
+              </div>
+            </div>
+
+            <!-- Voice Co-Driver Settings -->
+            <div class="voice-codriver-card">
+              <div class="voice-status-header">
+                <div class="d-flex align-items-center gap-2">
+                  <div class="voice-wave-animation">
+                    <span class="voice-wave-bar"></span>
+                    <span class="voice-wave-bar"></span>
+                    <span class="voice-wave-bar"></span>
+                    <span class="voice-wave-bar"></span>
+                    <span class="voice-wave-bar"></span>
+                  </div>
+                  <strong class="text-white small">AI Voice Co-Driver (Speech Synthesis)</strong>
+                </div>
+
+                <div class="d-flex align-items-center gap-2">
+                  <label class="small text-muted">Voice Language:</label>
+                  <select id="voice-lang-select" class="form-select form-select-sm bg-dark text-white border-secondary" style="width: 140px;">
+                    <option value="en-US">English (US)</option>
+                    <option value="ta-IN">Tamil (தமிழ்)</option>
+                  </select>
+                </div>
+              </div>
+              <small class="text-muted">
+                Synthesizes audible driving guidance & immediate danger alerts through the browser Web Speech API.
+              </small>
+            </div>
+          </div>
+
+          <!-- Right: Explainable AI & Session Timeline -->
+          <div>
+            <!-- Risk Gauge & Explainable AI Card -->
+            <div class="glass-card mb-3">
+              <div class="text-center mb-3">
+                <div class="metric-label">AI PREDICTIVE RISK SCORE</div>
+                <div class="risk-gauge-circle mx-auto my-2" id="risk-gauge-circle">
+                  <span class="risk-gauge-score" id="risk-score-value">15</span>
+                  <span class="risk-gauge-max">/ 100</span>
+                </div>
+                <div class="mt-2">
+                  <span id="risk-level-badge" class="badge-risk safe">SAFE</span>
+                </div>
+              </div>
+
+              <!-- Recommendation -->
+              <div class="p-3 rounded mb-3" style="background: rgba(0,0,0,0.3); border-left: 3px solid #00f0ff;">
+                <div class="small fw-bold text-cyan mb-1">AI Recommendation:</div>
+                <div class="small text-white" id="ai-recommendation-text">Maintain safe speed and following distance.</div>
+              </div>
+
+              <!-- Primary Reasons -->
+              <div class="mb-3">
+                <div class="small fw-bold text-muted mb-2">WHY IS THIS RISK DETECTED?</div>
+                <ul class="list-unstyled small text-white" id="xai-reasons-list">
+                  <li>• Nominal vehicle trajectory</li>
+                  <li>• Attentive driver biometric posture</li>
+                </ul>
+              </div>
+
+              <!-- Explainable Factors Delta Breakdown -->
+              <div>
+                <div class="small fw-bold text-muted mb-2">FACTOR BREAKDOWN (XAI)</div>
+                <div class="xai-factor-list" id="xai-factors-breakdown">
+                  <div class="text-muted small">No anomalous risk factors identified.</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Driving Session Event Timeline -->
+            <div class="glass-card">
+              <div class="widget-header">
+                <div class="widget-title"><i class="bi bi-clock-history"></i> Trip Safety Timeline</div>
+              </div>
+              <div id="live-timeline-list" style="max-height: 240px; overflow-y: auto;">
+                <div class="text-muted small text-center py-3">Driving session initialized. Telemetry tracking active.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/risk-engine.js"></script>
+  <script src="js/live-drive.js"></script>
+</body>
+</html>

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Road Safety Map — Drive Legal AI</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <style>
+    #road-safety-leaflet-map {
+      width: 100%;
+      height: 600px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-color);
+      box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    }
+    .map-filter-btn {
+      padding: 0.4rem 0.85rem;
+      font-size: 0.8rem;
+      font-weight: 700;
+      border-radius: 6px;
+      background: rgba(0,0,0,0.4);
+      color: #94a3b8;
+      border: 1px solid var(--border-subtle);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .map-filter-btn:hover { color: #fff; }
+    .map-filter-btn.active {
+      border-color: var(--accent-blue);
+      color: var(--accent-blue);
+      background: rgba(0,240,255,0.1);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-container">
+    <aside class="app-sidebar">
+      <div class="sidebar-header">
+        <i class="bi bi-shield-shaded sidebar-brand-icon"></i>
+        <span class="sidebar-brand-text">DRIVE LEGAL <span style="color:#00f0ff;">AI</span></span>
+      </div>
+
+      <div class="sidebar-nav">
+        <div class="nav-section-title">Commuter Control</div>
+        <a href="dashboard.html" class="nav-item-link"><i class="bi bi-speedometer2"></i> Dashboard</a>
+        <a href="live-drive.html" class="nav-item-link"><i class="bi bi-camera-video"></i> Live AI Drive</a>
+        <a href="vehicles.html" class="nav-item-link"><i class="bi bi-car-front-fill"></i> My Vehicles</a>
+        <a href="fine-management.html" class="nav-item-link"><i class="bi bi-receipt"></i> Fines & Challans</a>
+        <a href="payments.html" class="nav-item-link"><i class="bi bi-credit-card"></i> Pay Fines</a>
+        <a href="fastag.html" class="nav-item-link"><i class="bi bi-wallet2"></i> FASTag Wallet</a>
+        <a href="disputes.html" class="nav-item-link"><i class="bi bi-shield-exclamation"></i> Contest Fine</a>
+
+        <div class="nav-section-title">Roadway Safety</div>
+        <a href="road-map.html" class="nav-item-link active"><i class="bi bi-geo-alt"></i> Safety Map</a>
+        <a href="hazards.html" class="nav-item-link"><i class="bi bi-cone-striped"></i> Report Hazard</a>
+        <a href="route-planner.html" class="nav-item-link"><i class="bi bi-signpost-split"></i> Safe Route Planner</a>
+        <a href="notifications.html" class="nav-item-link"><i class="bi bi-bell"></i> Alerts & Notices</a>
+        <a href="emergency.html" class="nav-item-link"><i class="bi bi-hospital"></i> Emergency SOS</a>
+        <a href="settings.html" class="nav-item-link"><i class="bi bi-gear"></i> Settings</a>
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="user-badge-mini">
+          <div class="user-avatar-circle" id="sidebar-user-avatar">U</div>
+          <div style="flex:1; overflow:hidden;">
+            <div class="text-white text-truncate fw-bold small" id="sidebar-user-name">User</div>
+            <div class="text-muted small" id="sidebar-user-role">Public</div>
+          </div>
+          <button class="btn btn-sm text-muted p-0" onclick="Auth.logout()"><i class="bi bi-box-arrow-right fs-5"></i></button>
+        </div>
+      </div>
+    </aside>
+
+    <main class="app-main">
+      <header class="app-topbar">
+        <div class="d-flex align-items-center gap-3">
+          <button class="mobile-menu-toggle"><i class="bi bi-list"></i></button>
+          <span class="text-white fw-bold">Predictive Road Hazard & Blackspot Geographic Grid</span>
+        </div>
+        <a href="hazards.html" class="btn-dl btn-dl-primary" style="padding: 0.35rem 0.85rem; font-size: 0.82rem;">
+          <i class="bi bi-plus-circle"></i> Report Hazard
+        </a>
+      </header>
+
+      <div class="app-content">
+        <div class="dashboard-header">
+          <div class="dashboard-title-group">
+            <h1>Geospatial Roadway Safety Grid</h1>
+            <p>Live visualization of predicted accident blackspots, community hazard reports, and near-miss telemetry.</p>
+          </div>
+          <div class="dashboard-actions">
+            <button class="map-filter-btn active" data-filter="ALL">All Layers</button>
+            <button class="map-filter-btn" data-filter="BLACKSPOTS">🔴 Blackspots</button>
+            <button class="map-filter-btn" data-filter="HAZARDS">🟠 Hazards</button>
+            <button class="map-filter-btn" data-filter="NEARMISS">🔵 Near-Misses</button>
+          </div>
+        </div>
+
+        <!-- Leaflet Map Container -->
+        <div id="road-safety-leaflet-map"></div>
+
+        <!-- Legend -->
+        <div class="glass-card mt-3 p-3">
+          <div class="d-flex align-items-center justify-content-between flex-wrap gap-3 small">
+            <div><strong>Map Legend:</strong></div>
+            <div><i class="bi bi-circle-fill text-danger me-1"></i> <strong>Critical Blackspot:</strong> High fatality density + telemetry spikes</div>
+            <div><i class="bi bi-circle-fill text-warning me-1"></i> <strong>Road Hazard:</strong> Potholes, flooding, road construction</div>
+            <div><i class="bi bi-circle-fill text-cyan me-1"></i> <strong>Near-Miss Hotspot:</strong> Hard braking >0.6g & collision avoidance</div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/map.js"></script>
+</body>
+</html>

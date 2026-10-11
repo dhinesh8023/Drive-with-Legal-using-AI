@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fine & Challan Management — Drive Legal AI</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+  <div class="app-container">
+    <!-- Sidebar Navigation -->
+    <aside class="app-sidebar">
+      <div class="sidebar-header">
+        <i class="bi bi-shield-shaded sidebar-brand-icon"></i>
+        <span class="sidebar-brand-text">DRIVE LEGAL <span style="color:#00f0ff;">AI</span></span>
+      </div>
+
+      <div class="sidebar-nav">
+        <div class="nav-section-title">Commuter Control</div>
+        <a href="dashboard.html" class="nav-item-link"><i class="bi bi-speedometer2"></i> Dashboard</a>
+        <a href="live-drive.html" class="nav-item-link"><i class="bi bi-camera-video"></i> Live AI Drive</a>
+        <a href="vehicles.html" class="nav-item-link"><i class="bi bi-car-front-fill"></i> My Vehicles</a>
+        <a href="fine-management.html" class="nav-item-link active"><i class="bi bi-receipt"></i> Fines & Challans</a>
+        <a href="payments.html" class="nav-item-link"><i class="bi bi-credit-card"></i> Pay Fines</a>
+        <a href="fastag.html" class="nav-item-link"><i class="bi bi-wallet2"></i> FASTag Wallet</a>
+        <a href="disputes.html" class="nav-item-link"><i class="bi bi-shield-exclamation"></i> Contest Fine</a>
+
+        <div class="nav-section-title">Roadway Safety</div>
+        <a href="road-map.html" class="nav-item-link"><i class="bi bi-geo-alt"></i> Safety Map</a>
+        <a href="hazards.html" class="nav-item-link"><i class="bi bi-cone-striped"></i> Report Hazard</a>
+        <a href="notifications.html" class="nav-item-link"><i class="bi bi-bell"></i> Alerts & Notices</a>
+        <a href="emergency.html" class="nav-item-link"><i class="bi bi-hospital"></i> Emergency SOS</a>
+        <a href="settings.html" class="nav-item-link"><i class="bi bi-gear"></i> Settings</a>
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="user-badge-mini">
+          <div class="user-avatar-circle" id="sidebar-user-avatar">U</div>
+          <div style="flex:1; overflow:hidden;">
+            <div class="text-white text-truncate fw-bold small" id="sidebar-user-name">User Profile</div>
+            <div class="text-muted small" id="sidebar-user-role">Role</div>
+          </div>
+          <button class="btn btn-sm text-muted p-0" onclick="Auth.logout()"><i class="bi bi-box-arrow-right fs-5"></i></button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="app-main">
+      <header class="app-topbar">
+        <div class="d-flex align-items-center gap-3">
+          <button class="mobile-menu-toggle"><i class="bi bi-list"></i></button>
+          <span class="text-white fw-bold">Official Fine & Challan Management System</span>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+          <a href="payments.html" class="btn-dl btn-dl-primary" style="padding: 0.35rem 0.85rem; font-size: 0.82rem;">
+            <i class="bi bi-credit-card"></i> Instant Clearance
+          </a>
+        </div>
+      </header>
+
+      <div class="app-content">
+        <div class="dashboard-header">
+          <div class="dashboard-title-group">
+            <h1>Official Fine Records & Status Registry</h1>
+            <p>Review legal fines, inspection reports, escalation reminder stages, and digital clearance receipts.</p>
+          </div>
+        </div>
+
+        <div class="glass-card">
+          <div class="widget-header flex-wrap gap-2">
+            <div class="widget-title"><i class="bi bi-receipt-cutoff"></i> Traffic E-Challans</div>
+            <div class="d-flex align-items-center gap-2">
+              <label class="small text-muted">Status:</label>
+              <select id="fine-status-filter" class="form-select form-select-sm bg-dark text-white border-secondary" style="width: 150px;">
+                <option value="">All Statuses</option>
+                <option value="PENDING">Pending Payment</option>
+                <option value="PAID">Paid / Cleared</option>
+                <option value="OVERDUE">Overdue Notices</option>
+                <option value="DISPUTED">Disputed</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="dl-table-responsive">
+            <table class="dl-table">
+              <thead>
+                <tr>
+                  <th>Fine Ticket ID</th>
+                  <th>Violation Type</th>
+                  <th>Vehicle Number</th>
+                  <th>Configured Amount</th>
+                  <th>Due Date</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="fines-table-tbody">
+                <tr><td colspan="7" class="text-center text-muted py-4">Loading fine tickets...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Dispute Submission Modal -->
+  <div class="modal fade" id="disputeModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content dl-modal">
+        <div class="modal-header dl-modal-header">
+          <h5 class="modal-title fw-bold text-white" id="dispute-modal-label">Contest Fine Ticket</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form id="dispute-submit-form">
+          <div class="modal-body p-4">
+            <input type="hidden" id="dispute-target-fine-id">
+
+            <div class="form-group mb-3">
+              <label class="form-label">Legal Justification / Grounds for Contest</label>
+              <select id="dispute-reason-select" class="form-select bg-dark text-white border-secondary" required>
+                <option value="Incorrect Vehicle / Mismatched Plate">Incorrect Vehicle / Mismatched Plate</option>
+                <option value="Medical or Life-Saving Emergency">Medical or Life-Saving Emergency</option>
+                <option value="Traffic Police Manual Direction Override">Traffic Police Manual Direction Override</option>
+                <option value="Not Driving / Vehicle Sold or Stolen">Not Driving / Vehicle Sold or Stolen</option>
+                <option value="Camera Calibration / Glitch">Camera Calibration / Sensor Glitch</option>
+                <option value="Other Justified Reason">Other Justified Reason</option>
+              </select>
+            </div>
+
+            <div class="form-group mb-3">
+              <label class="form-label">Explanation / Factual Details</label>
+              <textarea id="dispute-description-input" rows="4" class="dl-input" placeholder="Provide factual context to assist reviewing officers..." required></textarea>
+            </div>
+
+            <div class="alert alert-warning py-2 small mb-0">
+              <i class="bi bi-info-circle"></i> Once submitted, the fine is placed on judicial hold and reviewed by a police officer.
+            </div>
+          </div>
+          <div class="modal-footer dl-modal-footer">
+            <button type="button" class="btn-dl btn-dl-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn-dl btn-dl-primary">Submit Dispute</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/fines.js"></script>
+</body>
+</html>

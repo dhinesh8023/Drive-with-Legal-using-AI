@@ -1,0 +1,37 @@
+{
+  "name": "drive-legal-ai",
+  "version": "1.0.0",
+  "description": "Drive Legal AI - Predictive Road Safety, Violation Management & Smart City Platform",
+  "main": "backend/server.js",
+  "scripts": {
+    "start": "node backend/server.js",
+    "dev": "nodemon backend/server.js",
+    "seed": "node backend/seed/seedData.js",
+    "build": "echo 'Root build complete'"
+  },
+  "keywords": [
+    "ai",
+    "road-safety",
+    "sih2026",
+    "traffic",
+    "smart-city"
+  ],
+  "author": "Drive Legal AI Team",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^1.7.9",
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "express-rate-limit": "^7.5.0",
+    "helmet": "^8.0.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.9.5",
+    "morgan": "^1.10.0",
+    "multer": "^1.4.5-lts.1",
+    "nodemailer": "^6.10.0",
+    "pdfkit": "^0.16.0",
+    "socket.io": "^4.8.1"
+  }
+}

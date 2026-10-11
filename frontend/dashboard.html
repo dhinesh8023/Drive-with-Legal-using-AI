@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Commuter Dashboard — Drive Legal AI</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+  <div class="app-container">
+    <!-- Sidebar Navigation -->
+    <aside class="app-sidebar">
+      <div class="sidebar-header">
+        <i class="bi bi-shield-shaded sidebar-brand-icon"></i>
+        <span class="sidebar-brand-text">DRIVE LEGAL <span style="color:#00f0ff;">AI</span></span>
+      </div>
+
+      <div class="sidebar-nav">
+        <div class="nav-section-title">Commuter Control</div>
+        <a href="dashboard.html" class="nav-item-link active"><i class="bi bi-speedometer2"></i> Dashboard</a>
+        <a href="live-drive.html" class="nav-item-link"><i class="bi bi-camera-video"></i> Live AI Drive</a>
+        <a href="vehicles.html" class="nav-item-link"><i class="bi bi-car-front-fill"></i> My Vehicles</a>
+        <a href="fine-management.html" class="nav-item-link"><i class="bi bi-receipt"></i> Fines & Challans</a>
+        <a href="payments.html" class="nav-item-link"><i class="bi bi-credit-card"></i> Pay Fines</a>
+        <a href="fastag.html" class="nav-item-link"><i class="bi bi-wallet2"></i> FASTag Wallet</a>
+        <a href="disputes.html" class="nav-item-link"><i class="bi bi-shield-exclamation"></i> Contest Fine</a>
+
+        <div class="nav-section-title">Roadway Safety</div>
+        <a href="road-map.html" class="nav-item-link"><i class="bi bi-geo-alt"></i> Safety Map</a>
+        <a href="hazards.html" class="nav-item-link"><i class="bi bi-cone-striped"></i> Report Hazard</a>
+        <a href="route-planner.html" class="nav-item-link"><i class="bi bi-signpost-split"></i> Safe Route Planner</a>
+        <a href="notifications.html" class="nav-item-link"><i class="bi bi-bell"></i> Alerts & Notices</a>
+        <a href="emergency.html" class="nav-item-link"><i class="bi bi-hospital"></i> Emergency SOS</a>
+
+        <div class="nav-section-title">System</div>
+        <a href="settings.html" class="nav-item-link"><i class="bi bi-gear"></i> Settings</a>
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="user-badge-mini">
+          <div class="user-avatar-circle" id="sidebar-user-avatar">U</div>
+          <div style="flex:1; overflow:hidden;">
+            <div class="text-white text-truncate fw-bold small" id="sidebar-user-name">Commuter User</div>
+            <div class="text-muted small" id="sidebar-user-role">Public Commuter</div>
+          </div>
+          <button class="btn btn-sm text-muted p-0" onclick="Auth.logout()"><i class="bi bi-box-arrow-right fs-5"></i></button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="app-main">
+      <header class="app-topbar">
+        <div class="d-flex align-items-center gap-3">
+          <button class="mobile-menu-toggle"><i class="bi bi-list"></i></button>
+          <span class="text-white fw-bold">Commuter Safety Portal</span>
+        </div>
+        <div class="d-flex align-items-center gap-3">
+          <a href="live-drive.html" class="btn-dl btn-dl-primary" style="padding: 0.4rem 1rem; font-size: 0.85rem;">
+            <i class="bi bi-camera-video-fill"></i> Start Live AI Drive
+          </a>
+          <a href="notifications.html" class="btn btn-sm btn-dark position-relative">
+            <i class="bi bi-bell text-cyan"></i>
+          </a>
+        </div>
+      </header>
+
+      <div class="app-content">
+        <!-- Emergency Bar -->
+        <div class="emergency-shortcut-bar">
+          <div class="d-flex align-items-center gap-3">
+            <i class="bi bi-exclamation-octagon-fill text-danger fs-3"></i>
+            <div>
+              <div class="text-white fw-bold">Emergency Assistance Ready</div>
+              <small class="text-muted">Direct telemetry dispatch to 108 Ambulance and National Highway Patrol.</small>
+            </div>
+          </div>
+          <a href="emergency.html" class="btn-dl btn-dl-danger" style="padding: 0.45rem 1rem; font-size: 0.82rem;">
+            <i class="bi bi-telephone-outbound"></i> SOS Protocol
+          </a>
+        </div>
+
+        <!-- Dashboard Header -->
+        <div class="dashboard-header">
+          <div class="dashboard-title-group">
+            <h1>Welcome, <span id="welcome-user-name" class="text-cyan">Arun Kumar</span></h1>
+            <p>Predictive Driving Intelligence & Fine Management Overview</p>
+          </div>
+        </div>
+
+        <!-- Metrics Grid -->
+        <div class="metrics-grid">
+          <div class="glass-card metric-card">
+            <div class="metric-card-inner">
+              <div>
+                <div class="metric-label">Safe Driver Score</div>
+                <div class="metric-value text-cyan" id="driver-score-val">92/100</div>
+                <div class="metric-subtext text-success" id="driver-score-category">EXCELLENT DRIVER</div>
+              </div>
+              <div class="metric-icon-box cyan"><i class="bi bi-award"></i></div>
+            </div>
+          </div>
+
+          <div class="glass-card metric-card">
+            <div class="metric-card-inner">
+              <div>
+                <div class="metric-label">Active Registered Vehicle</div>
+                <div class="metric-value" style="font-size: 1.6rem; margin-top: 0.5rem;" id="active-vehicle-plate">TN09AB1234</div>
+                <div class="metric-subtext"><span id="user-vehicle-count">1</span> vehicle in garage</div>
+              </div>
+              <div class="metric-icon-box green"><i class="bi bi-car-front"></i></div>
+            </div>
+          </div>
+
+          <div class="glass-card metric-card">
+            <div class="metric-card-inner">
+              <div>
+                <div class="metric-label">FASTag Balance</div>
+                <div class="metric-value text-white" id="fastag-balance-val">₹2,500</div>
+                <div class="metric-subtext"><a href="fastag.html" class="text-cyan">Top-up Wallet →</a></div>
+              </div>
+              <div class="metric-icon-box orange"><i class="bi bi-wallet2"></i></div>
+            </div>
+          </div>
+
+          <div class="glass-card metric-card">
+            <div class="metric-card-inner">
+              <div>
+                <div class="metric-label">Pending Fine Tickets</div>
+                <div class="metric-value text-warning" id="pending-fines-count">0</div>
+                <div class="metric-subtext" id="pending-fines-total">₹0 Total Pending</div>
+              </div>
+              <div class="metric-icon-box red"><i class="bi bi-receipt"></i></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Next Hazard Alert Card -->
+        <div class="glass-card mb-4 p-3 border-warning">
+          <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+            <div class="d-flex align-items-center gap-3">
+              <i class="bi bi-cone-striped text-warning fs-3"></i>
+              <div>
+                <div class="text-white fw-bold" id="next-hazard-title">Upcoming Hazard Ahead: Pothole Cluster</div>
+                <small class="text-muted" id="next-hazard-desc">OMR Expressway Km 14: Reduced surface traction. Recommended speed: 50 km/h.</small>
+              </div>
+            </div>
+            <a href="road-map.html" class="btn-dl btn-dl-outline" style="font-size: 0.8rem; padding: 0.35rem 0.85rem;">View on Safety Map</a>
+          </div>
+        </div>
+
+        <!-- 2 Column Chart & Fines Layout -->
+        <div class="dashboard-grid-2col">
+          <div class="glass-card">
+            <div class="widget-header">
+              <div class="widget-title"><i class="bi bi-graph-up"></i> Weekly Safety & Telemetry Risk Trend</div>
+            </div>
+            <div style="height: 280px;">
+              <canvas id="safetyTrendChart"></canvas>
+            </div>
+          </div>
+
+          <div class="glass-card">
+            <div class="widget-header">
+              <div class="widget-title"><i class="bi bi-receipt"></i> Pending Challans</div>
+              <a href="fine-management.html" class="text-cyan small">View All →</a>
+            </div>
+            <div class="dl-table-responsive">
+              <table class="dl-table">
+                <thead>
+                  <tr>
+                    <th>Challan ID</th>
+                    <th>Violation</th>
+                    <th>Plate</th>
+                    <th>Amount</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="dashboard-fines-tbody">
+                  <tr><td colspan="5" class="text-center text-muted py-3">Loading challan records...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/dashboard.js"></script>
+</body>
+</html>

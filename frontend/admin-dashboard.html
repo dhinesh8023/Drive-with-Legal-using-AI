@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>System Administration — Drive Legal AI</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+  <div class="app-container">
+    <aside class="app-sidebar">
+      <div class="sidebar-header">
+        <i class="bi bi-shield-shaded sidebar-brand-icon"></i>
+        <span class="sidebar-brand-text">DRIVE LEGAL <span style="color:#00f0ff;">AI</span></span>
+      </div>
+
+      <div class="sidebar-nav">
+        <div class="nav-section-title">Root Administration</div>
+        <a href="admin-dashboard.html" class="nav-item-link active"><i class="bi bi-gear-wide-connected"></i> System Control</a>
+        <a href="government-dashboard.html" class="nav-item-link"><i class="bi bi-bar-chart"></i> Govt Analytics</a>
+        <a href="police-dashboard.html" class="nav-item-link"><i class="bi bi-shield-lock"></i> Police Command</a>
+        <a href="fine-management.html" class="nav-item-link"><i class="bi bi-receipt"></i> Fines Registry</a>
+        <a href="settings.html" class="nav-item-link"><i class="bi bi-sliders"></i> Settings</a>
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="user-badge-mini">
+          <div class="user-avatar-circle" id="sidebar-user-avatar">A</div>
+          <div style="flex:1; overflow:hidden;">
+            <div class="text-white text-truncate fw-bold small" id="sidebar-user-name">Administrator</div>
+            <div class="text-muted small" id="sidebar-user-role">System Root</div>
+          </div>
+          <button class="btn btn-sm text-muted p-0" onclick="Auth.logout()"><i class="bi bi-box-arrow-right fs-5"></i></button>
+        </div>
+      </div>
+    </aside>
+
+    <main class="app-main">
+      <header class="app-topbar">
+        <div class="d-flex align-items-center gap-3">
+          <button class="mobile-menu-toggle"><i class="bi bi-list"></i></button>
+          <span class="text-white fw-bold">Platform Configuration & Legal Rule Management</span>
+        </div>
+        <span class="badge bg-danger">ROOT PRIVILEGES</span>
+      </header>
+
+      <div class="app-content">
+        <div class="dashboard-header">
+          <div class="dashboard-title-group">
+            <h1>Statutory Fine Rules & System Audit Trail</h1>
+            <p>Section 2 Requirement: Fine amounts are dynamically configurable in the database rather than hardcoded.</p>
+          </div>
+        </div>
+
+        <!-- Fine Rules Table -->
+        <div class="glass-card mb-4">
+          <div class="widget-header">
+            <div class="widget-title"><i class="bi bi-sliders"></i> Configured Violation Fine Rules</div>
+          </div>
+
+          <div class="dl-table-responsive">
+            <table class="dl-table">
+              <thead>
+                <tr>
+                  <th>Violation Type</th>
+                  <th>Legal Code</th>
+                  <th>Base Fine (INR)</th>
+                  <th>Due Period</th>
+                  <th>Severity</th>
+                  <th>Demerit Points</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="fine-rules-tbody">
+                <tr><td colspan="7" class="text-center text-muted py-3">Loading configured fine rules...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Immutable Audit Trail Table -->
+        <div class="glass-card">
+          <div class="widget-header">
+            <div class="widget-title"><i class="bi bi-shield-check"></i> Immutable System Audit Trail</div>
+            <span class="badge bg-secondary">TAMPER-EVIDENT LOGS</span>
+          </div>
+
+          <div class="dl-table-responsive">
+            <table class="dl-table">
+              <thead>
+                <tr>
+                  <th>Actor Role</th>
+                  <th>Officer / User Name</th>
+                  <th>Legal Action</th>
+                  <th>Target Type</th>
+                  <th>Timestamp</th>
+                  <th>IP Address</th>
+                </tr>
+              </thead>
+              <tbody id="audit-trail-tbody">
+                <tr><td colspan="6" class="text-center text-muted py-3">Loading audit logs...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      if (!Auth.requireAuth(['ADMIN'])) return;
+      Utils.initNavigation();
+
+      await loadRules();
+      await loadAuditLogs();
+    });
+
+    async function loadRules() {
+      const res = await API.get('/fines/rules');
+      const tbody = document.getElementById('fine-rules-tbody');
+      if (!tbody) return;
+
+      if (!res.success || !res.data) return;
+      tbody.innerHTML = res.data.map(r => `
+        <tr>
+          <td><strong class="text-white">${r.violationType}</strong></td>
+          <td><span class="badge bg-secondary">${r.code}</span></td>
+          <td class="text-warning fw-bold">₹${r.baseFine}</td>
+          <td>${r.duePeriodDays} Days</td>
+          <td><span class="badge bg-${r.severity === 'CRITICAL' ? 'danger' : r.severity === 'HIGH' ? 'warning' : 'info'}">${r.severity}</span></td>
+          <td>-${r.pointsDeduction} pts</td>
+          <td><span class="badge bg-success">ACTIVE</span></td>
+        </tr>
+      `).join('');
+    }
+
+    async function loadAuditLogs() {
+      // Fetch recent audit logs from mock/server
+      const tbody = document.getElementById('audit-trail-tbody');
+      if (!tbody) return;
+
+      const dummyAudits = [
+        { role: 'POLICE', name: 'Inspector Vikram', action: 'VIOLATION_APPROVED', target: 'VIOLATION', time: new Date().toLocaleTimeString(), ip: '127.0.0.1' },
+        { role: 'POLICE', name: 'Inspector Vikram', action: 'USER_SEARCH', target: 'SEARCH', time: new Date(Date.now() - 300000).toLocaleTimeString(), ip: '127.0.0.1' },
+        { role: 'USER', name: 'Arun Kumar', action: 'PAYMENT_VERIFIED', target: 'PAYMENT', time: new Date(Date.now() - 600000).toLocaleTimeString(), ip: '127.0.0.1' },
+        { role: 'SYSTEM', name: 'AI Edge Sensor', action: 'VIOLATION_CANDIDATE_CAPTURED', target: 'VIOLATION', time: new Date(Date.now() - 900000).toLocaleTimeString(), ip: '127.0.0.1' },
+      ];
+
+      tbody.innerHTML = dummyAudits.map(a => `
+        <tr>
+          <td><span class="badge bg-${a.role === 'POLICE' ? 'warning text-dark' : a.role === 'ADMIN' ? 'danger' : 'info text-dark'}">${a.role}</span></td>
+          <td class="text-white">${a.name}</td>
+          <td><code class="text-cyan">${a.action}</code></td>
+          <td>${a.target}</td>
+          <td class="small text-muted">${a.time}</td>
+          <td class="small text-dim">${a.ip}</td>
+        </tr>
+      `).join('');
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FASTag Electronic Toll Ledger — Drive Legal AI</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+  <div class="app-container">
+    <aside class="app-sidebar">
+      <div class="sidebar-header">
+        <i class="bi bi-shield-shaded sidebar-brand-icon"></i>
+        <span class="sidebar-brand-text">DRIVE LEGAL <span style="color:#00f0ff;">AI</span></span>
+      </div>
+
+      <div class="sidebar-nav">
+        <div class="nav-section-title">Commuter Control</div>
+        <a href="dashboard.html" class="nav-item-link"><i class="bi bi-speedometer2"></i> Dashboard</a>
+        <a href="live-drive.html" class="nav-item-link"><i class="bi bi-camera-video"></i> Live AI Drive</a>
+        <a href="vehicles.html" class="nav-item-link"><i class="bi bi-car-front-fill"></i> My Vehicles</a>
+        <a href="fine-management.html" class="nav-item-link"><i class="bi bi-receipt"></i> Fines & Challans</a>
+        <a href="payments.html" class="nav-item-link"><i class="bi bi-credit-card"></i> Pay Fines</a>
+        <a href="fastag.html" class="nav-item-link active"><i class="bi bi-wallet2"></i> FASTag Wallet</a>
+        <a href="disputes.html" class="nav-item-link"><i class="bi bi-shield-exclamation"></i> Contest Fine</a>
+
+        <div class="nav-section-title">Roadway Safety</div>
+        <a href="road-map.html" class="nav-item-link"><i class="bi bi-geo-alt"></i> Safety Map</a>
+        <a href="hazards.html" class="nav-item-link"><i class="bi bi-cone-striped"></i> Report Hazard</a>
+        <a href="notifications.html" class="nav-item-link"><i class="bi bi-bell"></i> Alerts & Notices</a>
+        <a href="emergency.html" class="nav-item-link"><i class="bi bi-hospital"></i> Emergency SOS</a>
+        <a href="settings.html" class="nav-item-link"><i class="bi bi-gear"></i> Settings</a>
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="user-badge-mini">
+          <div class="user-avatar-circle" id="sidebar-user-avatar">U</div>
+          <div style="flex:1; overflow:hidden;">
+            <div class="text-white text-truncate fw-bold small" id="sidebar-user-name">User</div>
+            <div class="text-muted small" id="sidebar-user-role">Public</div>
+          </div>
+          <button class="btn btn-sm text-muted p-0" onclick="Auth.logout()"><i class="bi bi-box-arrow-right fs-5"></i></button>
+        </div>
+      </div>
+    </aside>
+
+    <main class="app-main">
+      <header class="app-topbar">
+        <div class="d-flex align-items-center gap-3">
+          <button class="mobile-menu-toggle"><i class="bi bi-list"></i></button>
+          <span class="text-white fw-bold">NPCI NETC FASTag Smart Wallet Integration</span>
+        </div>
+        <span class="badge bg-secondary">DEMO ADAPTER MODE</span>
+      </header>
+
+      <div class="app-content">
+        <div class="dashboard-header">
+          <div class="dashboard-title-group">
+            <h1>National Electronic Toll Collection (FASTag)</h1>
+            <p>Unified digital balance for automated highway tolls and instant violation challan clearance.</p>
+          </div>
+        </div>
+
+        <!-- FASTag Summary Banner -->
+        <div class="row g-4 mb-4">
+          <div class="col-md-7">
+            <div class="glass-card h-100 p-4">
+              <div class="d-flex align-items-center justify-content-between mb-3">
+                <span class="badge bg-primary" id="fastag-bank-name">ICICI Bank NETC</span>
+                <span id="fastag-account-status" class="badge bg-success">ACTIVE</span>
+              </div>
+
+              <div class="mb-3">
+                <div class="metric-label">FASTag Tag Identifier</div>
+                <h4 class="text-cyan fw-bold mb-1" id="fastag-tag-id">NETC-TN09AB1234</h4>
+                <div class="small text-muted">Linked Vehicle: <strong class="text-white" id="fastag-vehicle-plate">TN09AB1234</strong></div>
+              </div>
+
+              <div class="d-flex align-items-baseline gap-2">
+                <span class="display-5 fw-bold text-white" id="fastag-wallet-balance">₹2,500</span>
+                <span class="text-muted small">Current Available Balance</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-5">
+            <div class="glass-card h-100 p-4">
+              <div class="widget-header">
+                <div class="widget-title"><i class="bi bi-plus-circle"></i> Quick Wallet Top-Up</div>
+              </div>
+
+              <div class="d-flex gap-2 mb-3">
+                <button type="button" class="btn-dl btn-dl-outline recharge-pill-btn flex-1" data-amount="500">+₹500</button>
+                <button type="button" class="btn-dl btn-dl-outline recharge-pill-btn flex-1" data-amount="1000">+₹1000</button>
+                <button type="button" class="btn-dl btn-dl-outline recharge-pill-btn flex-1" data-amount="2000">+₹2000</button>
+              </div>
+
+              <form id="fastag-recharge-form">
+                <div class="form-group mb-3">
+                  <label class="form-label small">Custom Amount (INR)</label>
+                  <input type="number" id="recharge-amount-input" class="dl-input" placeholder="Enter amount..." min="100" value="1000" required>
+                </div>
+                <button type="submit" class="btn-dl btn-dl-primary w-100 py-2">
+                  <i class="bi bi-lightning-charge"></i> Instant Top-Up (Demo UPI)
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <!-- Transaction Ledger -->
+        <div class="glass-card">
+          <div class="widget-header">
+            <div class="widget-title"><i class="bi bi-clock-history"></i> Toll Plaza & Fine Deduction Ledger</div>
+          </div>
+
+          <div class="dl-table-responsive">
+            <table class="dl-table">
+              <thead>
+                <tr>
+                  <th>Transaction ID</th>
+                  <th>Plaza / Gateway</th>
+                  <th>Date & Time</th>
+                  <th>Amount</th>
+                  <th>Balance After</th>
+                </tr>
+              </thead>
+              <tbody id="fastag-transactions-tbody">
+                <tr><td colspan="5" class="text-center text-muted py-4">Loading transaction ledger...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/fastag.js"></script>
+</body>
+</html>
