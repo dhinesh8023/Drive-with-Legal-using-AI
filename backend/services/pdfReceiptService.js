@@ -1,10 +1,18 @@
 const PDFDocument = require('pdfkit');
 const fs = require('fs');
 const path = require('path');
+const os = require('os');
 
-const receiptsDir = path.join(__dirname, '../public/receipts');
-if (!fs.existsSync(receiptsDir)) {
-  fs.mkdirSync(receiptsDir, { recursive: true });
+const receiptsDir = process.env.VERCEL
+  ? path.join(os.tmpdir(), 'receipts')
+  : path.join(__dirname, '../public/receipts');
+
+try {
+  if (!fs.existsSync(receiptsDir)) {
+    fs.mkdirSync(receiptsDir, { recursive: true });
+  }
+} catch (e) {
+  // Gracefully bypass readonly filesystems
 }
 
 /**
