@@ -16,6 +16,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 async function loadDashboardData() {
   try {
+    const user = Auth.getUser();
+
     // 1. Load Vehicles
     const vRes = await API.get('/vehicles');
     const vehicleCountEl = document.getElementById('user-vehicle-count');

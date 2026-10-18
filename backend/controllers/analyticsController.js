@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const Violation = require('../models/Violation');
 const Fine = require('../models/Fine');
 const Payment = require('../models/Payment');
@@ -6,12 +7,56 @@ const NearMiss = require('../models/NearMiss');
 const Blackspot = require('../models/Blackspot');
 const User = require('../models/User');
 
+const MOCK_ANALYTICS = {
+  violations: {
+    total: 24,
+    pendingReview: 7,
+    approved: 15,
+    rejected: 2,
+    byType: [
+      { _id: 'Overspeeding', count: 12 },
+      { _id: 'Wrong-Side Driving', count: 5 },
+      { _id: 'Red-Light Violation', count: 4 },
+      { _id: 'Mobile Phone Usage', count: 3 },
+    ],
+  },
+  finances: {
+    totalFinesCount: 18,
+    totalCollected: 24500,
+    pendingCollection: 11500,
+    overdueCollection: 3500,
+    paymentMethods: [
+      { _id: 'UPI', count: 10, totalAmount: 14000 },
+      { _id: 'FASTAG', count: 5, totalAmount: 7500 },
+      { _id: 'CARD', count: 3, totalAmount: 3000 },
+    ],
+  },
+  roadSafety: {
+    activeHazards: 8,
+    highRiskBlackspots: 5,
+    recordedNearMisses: 10,
+    districts: [
+      { district: 'Chennai Central', count: 14 },
+      { district: 'Bengaluru South', count: 12 },
+      { district: 'Coimbatore Urban', count: 8 },
+      { district: 'Madurai Ring Road', count: 6 },
+      { district: 'Salem Expressway', count: 4 },
+    ],
+  },
+};
+
 /**
  * @desc    Comprehensive Government & Police Command Analytics
  * @route   GET /api/analytics/dashboard
  */
 const getDashboardAnalytics = async (req, res, next) => {
   try {
+    if (mongoose.connection.readyState !== 1) {
+      return res.status(200).json({
+        success: true,
+        data: MOCK_ANALYTICS,
+      });
+    }
     // 1. Violations metrics
     const totalViolations = await Violation.countDocuments();
     const pendingReview = await Violation.countDocuments({ reviewStatus: 'PENDING' });

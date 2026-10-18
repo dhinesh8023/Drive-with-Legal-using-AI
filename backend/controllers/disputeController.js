@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const Dispute = require('../models/Dispute');
 const Fine = require('../models/Fine');
 const { generateId } = require('../utils/helpers');
@@ -9,6 +10,13 @@ const { recordAudit } = require('../services/auditService');
  */
 const getDisputes = async (req, res, next) => {
   try {
+    if (mongoose.connection.readyState !== 1) {
+      return res.status(200).json({
+        success: true,
+        count: 0,
+        data: [],
+      });
+    }
     let query = {};
     if (req.user.role === 'USER') {
       query.user = req.user._id;

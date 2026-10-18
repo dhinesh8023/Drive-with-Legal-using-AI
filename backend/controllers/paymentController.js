@@ -1,6 +1,8 @@
+const mongoose = require('mongoose');
 const Payment = require('../models/Payment');
 const Fine = require('../models/Fine');
 const User = require('../models/User');
+const mockDataStore = require('../services/mockDataStore');
 const paymentAdapter = require('../services/paymentAdapter');
 const fastagService = require('../services/fastagService');
 const fraudService = require('../services/fraudDetectionService');
@@ -17,6 +19,21 @@ const fs = require('fs');
 const initiatePayment = async (req, res, next) => {
   try {
     const { fineId, paymentMethod } = req.body;
+
+    if (mongoose.connection.readyState !== 1) {
+      const mockFine = mockDataStore.fines.find((f) => f._id === fineId || f.fineId === fineId) || mockDataStore.fines[0];
+      return res.status(200).json({
+        success: true,
+        message: 'Payment session created (Demo Gateway)',
+        data: {
+          paymentId: 'PAY-' + Date.now(),
+          amount: mockFine.fineAmount,
+          fineId: mockFine.fineId,
+          gatewayOrderId: 'ORDER-' + Date.now(),
+          qrCodeData: 'upi://pay?pa=trafficpolice@sbi&pn=DriveLegalAI&am=' + mockFine.fineAmount,
+        },
+      });
+    }
 
     const fine = await Fine.findById(fineId);
     if (!fine) {

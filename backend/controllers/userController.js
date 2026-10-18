@@ -1,7 +1,9 @@
+const mongoose = require('mongoose');
 const User = require('../models/User');
 const Vehicle = require('../models/Vehicle');
 const Violation = require('../models/Violation');
 const Fine = require('../models/Fine');
+const mockDataStore = require('../services/mockDataStore');
 const { recordAudit } = require('../services/auditService');
 
 /**
@@ -11,6 +13,18 @@ const { recordAudit } = require('../services/auditService');
 const getUsers = async (req, res, next) => {
   try {
     const { role, limit = 50, page = 1 } = req.query;
+
+    if (mongoose.connection.readyState !== 1) {
+      let list = mockDataStore.users.map(({ password, ...u }) => u);
+      if (role) list = list.filter((u) => u.role === role);
+      return res.status(200).json({
+        success: true,
+        total: list.length,
+        count: list.length,
+        data: list,
+      });
+    }
+
     const query = {};
     if (role) query.role = role;
 
