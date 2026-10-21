@@ -61,9 +61,16 @@
           <button class="mobile-menu-toggle"><i class="bi bi-list"></i></button>
           <span class="text-white fw-bold">Live AI Drive Telemetry HUD</span>
         </div>
-        <div class="d-flex align-items-center gap-2">
-          <button id="toggle-camera-btn" class="btn-dl btn-dl-outline" style="padding: 0.35rem 0.85rem; font-size: 0.82rem;">
-            <i class="bi bi-camera-video"></i> Connect Physical Camera
+        <div class="d-flex align-items-center gap-2 flex-wrap">
+          <select id="camera-mode-select" class="form-select form-select-sm bg-dark text-white border-secondary" style="width: auto; font-size: 0.8rem;">
+            <option value="user">Driver Monitoring (Front)</option>
+            <option value="environment">Roadway Ahead (Rear)</option>
+          </select>
+          <button id="toggle-camera-btn" class="btn-dl btn-dl-primary" style="padding: 0.35rem 0.85rem; font-size: 0.82rem;">
+            <i class="bi bi-camera-video"></i> Start Real Computer Vision Stream
+          </button>
+          <button id="toggle-gps-btn" class="btn-dl btn-dl-outline" style="padding: 0.35rem 0.85rem; font-size: 0.82rem;">
+            <i class="bi bi-geo-alt"></i> Device GPS Speed
           </button>
           <button id="emergency-sos-btn" class="btn-dl btn-dl-danger" style="padding: 0.35rem 0.85rem; font-size: 0.82rem;">
             <i class="bi bi-telephone-outbound"></i> SOS Alert
@@ -112,13 +119,41 @@
               </div>
             </div>
 
-            <!-- Scenario Selection Panel -->
+            <!-- Real-Time Velocity & Accelerator Controller (Final Year Project Evaluation) -->
+            <div class="glass-card mb-3 p-3">
+              <div class="d-flex align-items-center justify-content-between mb-2 flex-wrap gap-2">
+                <div class="d-flex align-items-center gap-2">
+                  <i class="bi bi-speedometer2 text-cyan fs-5"></i>
+                  <span class="text-white fw-bold small">REAL-TIME VEHICLE ACCELERATOR & RADAR TELEMETRY</span>
+                  <span class="badge bg-secondary" id="gps-status-badge">MANUAL / SENSOR INPUT</span>
+                </div>
+                <div class="small text-muted">Slide or press pedals to test overspeeding & radar response</div>
+              </div>
+              <div class="row align-items-center g-3">
+                <div class="col-md-7">
+                  <div class="d-flex align-items-center gap-3">
+                    <span class="small text-muted fw-bold">0</span>
+                    <input type="range" class="form-range flex-grow-1" id="vehicle-throttle-slider" min="0" max="140" value="48" step="1">
+                    <span class="small text-muted fw-bold">140 km/h</span>
+                  </div>
+                </div>
+                <div class="col-md-5">
+                  <div class="d-flex gap-2 justify-content-md-end">
+                    <button type="button" class="btn btn-sm btn-outline-info" id="btn-brake-10"><i class="bi bi-dash-circle"></i> Brake -10</button>
+                    <button type="button" class="btn btn-sm btn-outline-warning" id="btn-accel-10"><i class="bi bi-plus-circle"></i> Accel +10</button>
+                    <button type="button" class="btn btn-sm btn-outline-danger" id="btn-test-speed-violation"><i class="bi bi-lightning-charge"></i> 95 km/h Test</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Autonomous Safety Presets & Risk Injections -->
             <div class="scenario-selector-panel">
               <div class="d-flex align-items-center justify-content-between mb-2">
                 <span class="text-white fw-bold small text-uppercase" style="letter-spacing: 0.05em;">
-                  <i class="bi bi-sliders text-cyan"></i> Hackathon Interactive Scenarios
+                  <i class="bi bi-sliders text-cyan"></i> Autonomous Risk Scenarios & Injections
                 </span>
-                <small class="text-muted">Simulate driving hazards & telemetry spikes in real-time</small>
+                <small class="text-muted">Inject vehicular risks and road condition dynamics in real-time</small>
               </div>
 
               <div class="scenario-grid">
@@ -247,6 +282,7 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
   <script src="js/config.js"></script>
   <script src="js/utils.js"></script>
   <script src="js/api.js"></script>

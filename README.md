@@ -2,7 +2,8 @@
 
 > **“See the Danger Before the Driver Does.”**  
 > *From Reactive Road Safety to Predictive Road Safety.*  
-> **Smart India Hackathon 2026 Grand Finalist Architecture**
+> **Final Year Engineering Capstone Project (B.E. / B.Tech Computer Science & AI)**  
+> **Autonomous Traffic Intelligence, Computer Vision Citation & Clearance System**
 
 ---
 
@@ -101,7 +102,7 @@ ACCIDENT PREVENTION
 
 ## 3. Seed Demo Accounts
 
-For instant Smart India Hackathon evaluation, the database includes pre-configured demo credentials:
+For instant evaluation and viva demonstration, the platform includes pre-configured credentials:
 
 | Role | Authorized Email | Password | Primary Portal |
 | :--- | :--- | :--- | :--- |
@@ -121,7 +122,7 @@ For instant Smart India Hackathon evaluation, the database includes pre-configur
 drive-legal-ai/
 │
 ├── frontend/
-│   ├── index.html                  # Landing page & SIH concept showcase
+│   ├── index.html                  # Landing page & platform architecture showcase
 │   ├── login.html                  # Multi-role authentication & demo auto-fill
 │   ├── register.html               # Commuter registration & officer verification
 │   ├── forgot-password.html        # Recovery token reset workflow
@@ -289,55 +290,53 @@ The backend includes built-in internal heuristic fallbacks so the application ru
 
 ---
 
-## 6. Official Smart India Hackathon (SIH 2026) 5-10 Minute Demo Flow
+## 6. Project Viva & Real-Time Live Evaluation Flow
 
-| Step | Action | What to Showcase to Judges |
+| Step | Action | What to Showcase in Project Viva |
 | :---: | :--- | :--- |
 | **STEP 1** | **User Login** | Go to `login.html`, click **Public**, click **Auto-Fill Credentials**, and click **Authenticate**. |
-| **STEP 2** | **User Dashboard** | Review Safe Driver Score (`92/100`), registered vehicle, FASTag balance (`₹2,500`), and next road hazard alert. |
+| **STEP 2** | **User Dashboard** | Review Safe Driver Score (`92/100`), registered vehicle, FASTag balance (`₹850`), and next road hazard alert. |
 | **STEP 3** | **Start Live Drive** | Click **"Start Live AI Drive"** in the top bar to enter `live-drive.html`. |
-| **STEP 4** | **Normal Driving** | Point out the Horizon perspective road animation, AR HUD telemetry, and risk status = **SAFE (15/100)**. |
-| **STEP 5** | **Select Heavy Rain** | Click **"Heavy Rain"**. Risk increases to Moderate (`40/100`). Adaptive speed limit drops to 40 km/h. Voice co-driver sounds an alert. |
-| **STEP 6** | **Select Drowsiness / Distraction** | Click **"Drowsiness"**. Driver attention score plunges to 25%. Explainable AI breakdown shows `+35 Driver Drowsiness`. Voice co-driver warns driver to pull over. |
-| **STEP 7** | **Select Overspeeding** | Click **"Overspeeding"**. Speed increases to 92 km/h. Risk skyrockets to Critical (`85/100`). Voice warning plays in English or Tamil. |
-| **STEP 8** | **AI Detects Violation Candidate** | Point out the toast: *"AI Violation Candidate Captured: Overspeeding candidate forwarded to Police Portal for Officer Review"*. |
-| **STEP 9** | **Switch to Police Portal** | Log out, select **Police** tab, click **Auto-Fill Credentials** (`police@drivelegal.demo`), and log in to `police-dashboard.html`. |
-| **STEP 10** | **Police Officer Review** | Point out the new candidate in the table. Click **"Review"** to inspect photographic frame, AI confidence (`94%`), and detection metadata. |
-| **STEP 11** | **Officer Approves Fine** | Select configured rule (`Overspeeding - Base ₹1500`), add officer notes, and click **"Approve & Issue Fine"**. |
-| **STEP 12** | **Escalation Notification** | Explain the multi-tier escalation: Level 1 In-App, Level 2 SMS, Level 3 WhatsApp, Level 4 Final Overdue Alert. |
-| **STEP 13** | **User Opens Fine** | Switch back to commuter login or open `fine-management.html`. See the newly generated official fine ticket. |
-| **STEP 14** | **Select Payment Method** | Click **"Pay"** to open `payments.html`. Show payment methods: **[ UPI ]**, **[ Google Pay ]**, **[ PhonePe ]**, **[ FASTag Auto ]**. |
-| **STEP 15** | **Complete Payment** | Click **"Complete Payment Clearance"**. |
-| **STEP 16** | **Backend Verification** | The banking switch verifies transaction reference `TXN_...` on the backend (never trusting frontend client alone). |
-| **STEP 17** | **Fine Status Updates** | Fine status updates to **PAID / CLEARED**, and driver score gains +2 merit points. |
-| **STEP 18** | **Download Official Receipt** | Click **"Download Official Receipt"**. Opens the tamper-evident PDF digital receipt generated via PDFKit with digital verification hash. |
-| **STEP 19** | **Government Dashboard** | Log into `government-dashboard.html` (`gov@drivelegal.demo`). Observe real-time fine revenue charts, collection velocity, and district breakdown. |
-| **STEP 20** | **Blackspots & Near-Misses** | Open `blackspots.html` and `road-map.html`. Show how near-miss hard-braking events (>0.6g) contribute to predicting high-fatality blackspots before accidents occur. |
-| **STEP 21** | **Future Vision** | Conclude with the transition roadmap to Edge AI, V2V/V2X connected highway corridors, and Smart City Digital Twins. |
+| **STEP 4** | **Real-Time Webcam & Ocular Tracking** | Turn on webcam. The in-browser Computer Vision system tracks face orientation, gaze, and ocular blink duration at 60 FPS. Close your eyes for >1.5s to trigger real-time Drowsiness Alert and auto-snapshot! |
+| **STEP 5** | **Throttle & GPS Tracking** | Use the interactive accelerator slider or device GPS to modulate speed. Exceeding 80 km/h triggers Overspeeding violation candidate with live audio alarm in English or Tamil. |
+| **STEP 6** | **Select Weather / Scenario** | Click **"Heavy Rain"**. Risk increases to Moderate (`40/100`). Adaptive speed limit drops to 40 km/h. Voice co-driver sounds an alert. |
+| **STEP 7** | **Instant Socket.IO Push** | As soon as violation triggers, the browser captures the exact canvas frame snapshot and emits a Socket.IO event to the backend. |
+| **STEP 8** | **Switch to Police Portal** | In a second tab, open `police-dashboard.html` (`police@drivelegal.demo`). The police radar chime rings instantly and the new violation candidate appears live! |
+| **STEP 9** | **Police Officer Review** | Click **"Review"** to inspect the real camera frame photo, AI confidence score (`94%+`), and GPS location metadata. |
+| **STEP 10** | **Officer Approves Fine** | Select configured rule (`Overspeeding - Base ₹1500` or `Drowsy Driving`), add officer notes, and click **"Approve & Issue Fine"**. |
+| **STEP 11** | **Escalation Notification** | Explain the multi-tier escalation: Level 1 In-App, Level 2 SMS, Level 3 WhatsApp, Level 4 Final Overdue Alert. |
+| **STEP 12** | **User Opens Fine** | Switch back to commuter tab or open `fine-management.html`. The newly issued challan appears in real time without refreshing. |
+| **STEP 13** | **Select Payment Method** | Click **"Pay"** to open `payments.html`. Select from **[ UPI ]**, **[ Google Pay ]**, **[ PhonePe ]**, or **[ FASTag Auto-Debit ]**. |
+| **STEP 14** | **Complete Payment** | Click **"Complete Payment Clearance"**. The backend verifies the transaction reference securely. |
+| **STEP 15** | **Fine Status Updates** | Fine status updates to **PAID / CLEARED**, and driver score gains +2 merit points. |
+| **STEP 16** | **Download Official Receipt** | Click **"Download Official Receipt"**. Opens the cryptographic PDF challan clearance receipt generated dynamically via PDFKit with digital verification hash. |
+| **STEP 17** | **Government Dashboard** | Log into `government-dashboard.html` (`gov@drivelegal.demo`). Observe real-time fine revenue charts, collection velocity, and district breakdown. |
+| **STEP 18** | **Blackspots & Near-Misses** | Open `blackspots.html` and `road-map.html`. Show how near-miss hard-braking events (>0.6g) contribute to predicting high-fatality blackspots before accidents occur. |
+| **STEP 19** | **Future Architecture** | Conclude with the transition roadmap to Edge AI boxes, V2V/V2X connected highway corridors, and Smart City Digital Twins. |
 
 ---
 
-## 7. Future Development Roadmap
+## 7. System Architecture & Research Extensions
 
-- **Phase 1 (Current SIH Prototype):** HTML5/CSS3/Vanilla JS, Node.js Express, MongoDB, FastAPI microservice, explainable risk engine, officer verification, digital receipts, mock FASTag & payments.
-- **Phase 2 (Real AI Integration):** Edge YOLOv9 model inference, MediaPipe facial landmarks for eye-aspect ratio (EAR) drowsiness detection, and OpenCV Hough lane departure tracking.
-- **Phase 3 (Mobile Application):** Cross-platform Flutter / React Native application leveraging phone gyroscopes, accelerometers, GPS, and dashcam mounting.
-- **Phase 4 (Edge AI Box):** Microcontroller / Raspberry Pi / NVIDIA Jetson onboard compute box eliminating cellular latency.
-- **Phase 5 (V2V - Vehicle-to-Vehicle):** Dedicated Short-Range Communications (DSRC) broadcasting sudden braking events to trailing vehicles within 300 meters.
-- **Phase 6 (V2X - Vehicle-to-Infrastructure):** Smart traffic light priority signaling for ambulances and emergency responders.
-- **Phase 7 (Digital Twin Cities):** Comprehensive simulation model predicting road fatigue, monsoon waterlogging, and traffic signal timings.
+- **Module 1 (Real-Time Vision Edge Layer):** Browser-level 60 FPS face detector & ocular luminance closure tracking with fallback to optical flow; Python FastAPI OpenCV / YOLO integration.
+- **Module 2 (Risk Prediction Engine):** Multi-factor heuristic & explainable AI breakdown calculating instant 0-100 road risk scores.
+- **Module 3 (Legal Verification Workflow):** Strict human-in-the-loop statutory gate preventing arbitrary algorithmic fines.
+- **Module 4 (Real-Time Bidirectional Event Bus):** Duplex Socket.IO channels bridging vehicle edge sensors, commuter terminals, and police dispatchers.
+- **Module 5 (Autonomous Citation & Clearance):** Configurable fine rules, multi-channel escalation reminders, mock UPI/FASTag clearance, and cryptographically verified PDF challans.
+- **Module 6 (Near-Miss Intelligence & GIS):** GeoJSON blackspot clustering mapping high-deceleration shockwaves.
 
 ---
 
-## 8. Limitations & Legal Disclaimer
+## 8. Limitations & Academic Disclaimer
 
-1. **Prototype Disclaimer:** This software is developed as an academic and engineering prototype for the Smart India Hackathon 2026.
-2. **Non-Official Branding:** All banking, FASTag (NPCI NETC), SMS, and WhatsApp integrations are mock adapters running in demonstration mode. No real monetary transactions or government legal summons are dispatched.
-3. **AI Assistance Notice:** AI detections represent probabilistic estimations and do not constitute legal proof of liability without authorized officer verification and statutory due process.
+1. **Academic Project:** This software is developed as a final year engineering capstone project (B.E./B.Tech) demonstrating predictive road safety and AI-assisted law enforcement.
+2. **Third-Party Integrations:** All banking, FASTag (NPCI NETC), SMS, and WhatsApp integrations are designed with modular adapter interfaces running in resilient demonstration mode.
+3. **AI Verification Notice:** In compliance with statutory legal safeguards, AI detections represent probabilistic estimations and do not constitute legal proof of liability without authorized officer verification and statutory due process.
 
 ---
 
 ## 9. Contributors & License
 
-Developed with passion for **Smart India Hackathon 2026** by the **Drive Legal AI Team**.  
+Developed for **Final Year Engineering Capstone Project** by **Dhinesh & Team**.  
+Licensed under the **MIT License**.  
 Licensed under the [MIT License](LICENSE).

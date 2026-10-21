@@ -10,9 +10,25 @@ document.addEventListener('DOMContentLoaded', async () => {
   const welcomeEl = document.getElementById('welcome-user-name');
   if (welcomeEl) welcomeEl.textContent = user.name;
 
+  initDashboardSocket();
   await loadDashboardData();
   initSafetyChart();
 });
+
+function initDashboardSocket() {
+  if (typeof io === 'undefined') return;
+  try {
+    const socket = io(CONFIG.SOCKET_URL || window.location.origin, { transports: ['websocket', 'polling'] });
+    socket.on('fine_created', (data) => {
+      Utils.showToast(
+        'danger',
+        'Official Traffic Challan Issued',
+        `Challan #${data.fineId} generated for ${data.violationType} (${Utils.formatCurrency(data.fineAmount)}). Due date: ${Utils.formatDate(data.dueDate)}`
+      );
+      loadDashboardData();
+    });
+  } catch (e) {}
+}
 
 async function loadDashboardData() {
   try {

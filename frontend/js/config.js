@@ -1,6 +1,7 @@
 /**
  * DRIVE LEGAL AI — FRONTEND CONFIGURATION
- * Smart India Hackathon 2026
+ * Autonomous Predictive Road Safety Platform
+ * Final Year Engineering Project (B.E. / B.Tech)
  */
 const isLocal = window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost';
 

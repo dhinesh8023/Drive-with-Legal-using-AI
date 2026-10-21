@@ -5,10 +5,14 @@
 
 let selectedViolationForReview = null;
 let configuredFineRules = [];
+let policeSocket = null;
 
 document.addEventListener('DOMContentLoaded', async () => {
   if (!Auth.requireAuth(['POLICE', 'ADMIN'])) return;
   Utils.initNavigation();
+
+  // Initialize Socket.IO for real-time violation reception
+  initPoliceSocket();
 
   await loadPoliceMetrics();
   await loadFineRules();
@@ -139,6 +143,20 @@ window.openReviewModal = async function (id) {
   document.getElementById('modal-vio-confidence').textContent = `${vio.aiConfidence}%`;
   document.getElementById('modal-vio-source').textContent = vio.detectionSource;
 
+  // Render Real Photographic Evidence
+  const imgEl = document.getElementById('modal-evidence-img');
+  const phEl = document.getElementById('modal-evidence-placeholder');
+  if (imgEl && phEl) {
+    if (vio.evidenceImage && vio.evidenceImage !== '/assets/evidence/default_violation.jpg') {
+      imgEl.src = vio.evidenceImage;
+      imgEl.style.display = 'block';
+      phEl.style.display = 'none';
+    } else {
+      imgEl.style.display = 'none';
+      phEl.style.display = 'block';
+    }
+  }
+
   const notesEl = document.getElementById('modal-officer-notes');
   if (notesEl) notesEl.value = vio.officerNotes || '';
 
@@ -256,4 +274,54 @@ async function handleOfficerUserSearch(e) {
     .join('');
 
   Utils.showToast('info', 'Search Audited', `Search completed for ${res.resultCount} records. Action logged to audit trail.`);
+}
+
+/**
+ * Real-Time Socket.IO Listener for Inbound Telemetry & Violations
+ */
+function initPoliceSocket() {
+  if (typeof io === 'undefined') return;
+  try {
+    const socketUrl = CONFIG.SOCKET_URL || window.location.origin;
+    policeSocket = io(socketUrl, { transports: ['websocket', 'polling'] });
+
+    policeSocket.on('connect', () => {
+      console.log('[Police Socket] Connected to realtime enforcement stream:', policeSocket.id);
+    });
+
+    policeSocket.on('violation_detected', (candidate) => {
+      console.log('[Police Socket] Live candidate received:', candidate);
+      Utils.showToast(
+        'warning',
+        '🚨 Live Violation Candidate Inbound',
+        `${candidate.violationType} detected on ${candidate.vehicleNumber} at ${candidate.location}. Review required.`
+      );
+
+      // Play officer notification tone via Web Audio API
+      playChimeAlert();
+
+      // Refresh table & metrics in real-time
+      loadPoliceMetrics();
+      loadViolationsTable();
+    });
+  } catch (err) {
+    console.warn('[Police Socket] Connection notice:', err.message);
+  }
+}
+
+function playChimeAlert() {
+  try {
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(587.33, audioCtx.currentTime); // D5
+    osc.frequency.setValueAtTime(880, audioCtx.currentTime + 0.15); // A5
+    gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start();
+    osc.stop(audioCtx.currentTime + 0.5);
+  } catch (e) {}
 }

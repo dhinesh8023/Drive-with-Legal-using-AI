@@ -64,8 +64,8 @@ app.use(express.static(path.join(__dirname, '../frontend')));
 app.get(['/health', '/api/health'], (req, res) => {
   res.status(200).json({
     status: 'ONLINE',
-    service: 'Drive Legal AI Core Backend',
-    version: '1.0.0 (SIH 2026)',
+    service: 'Drive Legal AI Autonomous Traffic Intelligence & Safety Engine',
+    version: '2.0.0 (Final Year Engineering Project)',
     database: require('mongoose').connection.readyState === 1 ? 'CONNECTED' : 'STANDBY_MODE',
     timestamp: new Date().toISOString(),
   });
@@ -93,6 +93,25 @@ io.on('connection', (socket) => {
   socket.on('join_vehicle_telemetry', (vehicleNumber) => {
     socket.join(`vehicle_${vehicleNumber}`);
     logger.info(`Socket ${socket.id} subscribed to vehicle_${vehicleNumber}`);
+  });
+
+  socket.on('driver_telemetry_broadcast', (telemetry) => {
+    io.emit('driver_telemetry_live', telemetry);
+  });
+
+  socket.on('violation_detected', (candidate) => {
+    logger.info(`Relaying live violation candidate to police officers: ${candidate.violationId}`);
+    io.emit('violation_detected', candidate);
+  });
+
+  socket.on('fine_created', (fineData) => {
+    logger.info(`Relaying official fine issuance to commuter: ${fineData.fineId}`);
+    io.emit('fine_created', fineData);
+  });
+
+  socket.on('hazard_reported', (hazardData) => {
+    logger.info(`Broadcasting hazard alert: ${hazardData.hazardType}`);
+    io.emit('hazard_alert', hazardData);
   });
 
   socket.on('disconnect', () => {

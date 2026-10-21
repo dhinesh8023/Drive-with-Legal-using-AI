@@ -106,6 +106,23 @@ const verifyPayment = async (req, res, next) => {
   try {
     const { transactionReference, paymentId } = req.body;
 
+    if (mongoose.connection.readyState !== 1) {
+      const mockFine = mockDataStore.fines.find((f) => f.status === 'PENDING') || mockDataStore.fines[0];
+      mockFine.status = 'PAID';
+      mockFine.paidAt = new Date().toISOString();
+      return res.status(200).json({
+        success: true,
+        message: 'Payment successfully verified and fine settled.',
+        data: {
+          paymentId: paymentId || 'PAY-' + Date.now(),
+          fineId: mockFine.fineId,
+          amount: mockFine.fineAmount,
+          status: 'SUCCESS',
+          receiptUrl: `/api/payments/receipt/${mockFine._id}`,
+        },
+      });
+    }
+
     let payment;
     if (paymentId) {
       payment = await Payment.findOne({ paymentId });
@@ -285,6 +302,21 @@ const getPaymentById = async (req, res, next) => {
 const downloadReceipt = async (req, res, next) => {
   try {
     const { fineId } = req.params;
+
+    if (mongoose.connection.readyState !== 1) {
+      const fine = mockDataStore.fines.find((f) => f._id === fineId || f.fineId === fineId) || mockDataStore.fines[1];
+      const mockPayment = {
+        paymentId: 'PAY-SETTLED-' + (fine.fineId || '2026-0045'),
+        amount: fine.fineAmount || 1000,
+        paymentMethod: 'UPI',
+        createdAt: new Date(),
+      };
+      const newReceipt = await generateFineReceiptPdf(mockPayment, fine);
+      res.setHeader('Content-Type', 'application/pdf');
+      res.setHeader('Content-Disposition', `attachment; filename="DriveLegalAI_Receipt_${fine.fineId}.pdf"`);
+      return fs.createReadStream(newReceipt.filePath).pipe(res);
+    }
+
     const fine = await Fine.findOne({
       $or: [{ _id: fineId.length === 24 ? fineId : null }, { fineId: fineId }],
     }).populate('payment');

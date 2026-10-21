@@ -43,7 +43,7 @@ const generateFineReceiptPdf = (payment, fine) => {
         .fillColor('#94a3b8')
         .fontSize(10)
         .font('Helvetica')
-        .text('Predictive Road Safety & Smart Enforcement Platform | SIH 2026', 50, 58);
+        .text('Autonomous Traffic Intelligence & Citation Clearance System', 50, 58);
 
       doc
         .fillColor('#22c55e')
